@@ -1,4 +1,5 @@
 import random
+import os
 
 def wordSelect():
   f=open("dictionary.txt", "r")
@@ -28,13 +29,12 @@ def inputValidate(c):
   else:
     return 1
     
-def show(c, arr):
-  basic=[]
-  for i in arr:
-    if (c==i):
-      basic.extend(c)
-    else:
-      basic.extend("*")
+def maker(c, arr, basic):
+    
+  for i in range (0, len(arr)):
+    if (c==arr[i]):
+      basic[i]=arr[i]
+
   return basic
   
 def checker(rand, check):
@@ -42,36 +42,52 @@ def checker(rand, check):
     return 1
   else:
     return 0
+
+if __name__== "__main__":
+  rand_main=wordSelect()
+  [arr_main, num]=letterNumber(rand_main)
   
-rand=wordSelect()
-[arr, num]=letterNumber(rand)
-
-win=0
-turn=0
-
-while(win==0 or trun <=len(arr)):
+  win=0
+  turn=0
   basic=[]
-  print "you have "+str(6-turn)+" turn(s) left!"
-  flag=0
-  while(flag==0):
-    c=inputTaker()
-    flag=inputValidate(c)
-    
-  basic=show(c,arr)
-  check=""
-  for i in basic:
-    check=check+i
-  checked=checker(rand,check)
-  if(checked==1):
-    win=1
-  else:
-    win=0
-    
-  turn +=1
-
-if(win==1 and turn<=len(arr)):
-  print "Game Over! You win!"
-else:
-  print "Game Over! You Loose"
+  for i in arr_main:
+    basic.extend("*")
   
+  first=""
+  for i in basic:
+    first=first+i
+  print first
+  
+  while(win==0):
+    
+    print "you have "+str(len(arr_main)-turn)+" turn(s) left!"
+    flag=0
+    
+    while(flag==0):
+      c=inputTaker()
+      os.system('clear')
+      flag=inputValidate(c)
+      
+    basic=maker(c, arr_main, basic)
+    check=""
+    for i in basic:
+      check=check+i
+    print check
+    
+    checked=checker(rand_main,check)
+    
+    if(checked==1):
+      win=1
+    else:
+      win=0
+    
+    turn=turn+1
+    if(turn>=len(arr_main)):
+        break
+  
+  if(win==1 and turn<=len(arr_main)):
+    print "Game Over! You win!"
+  else:
+    print "Game Over! You Loose"
+    
   
