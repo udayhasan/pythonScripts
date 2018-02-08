@@ -148,7 +148,7 @@ def plotter():
             monthWise['November']=month[i]
         else:
             monthWise['December']=month[i]
-    
+
     for i in months:
         x.append(i)
         y.append(monthWise[i])
