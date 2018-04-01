@@ -1,5 +1,6 @@
+#!/bin/python
 import os
-os.system("clear")
+os.system("reset")
 
 off_jump="012b"
 off_ldstbr="06b"
@@ -106,60 +107,103 @@ def data_processing_func(data):
 	print code
 	return code
 
-def read_file():
-	    fname=raw_input("Name of instruction file: ")
-	    fname_new=fname.split(".")
-	    fname2=fname_new[0]+".bin"
-	    
-	    f1=open(fname, "r")
-	    rd=f1.read()
-	    rd=rd.lower()
-	    f1.close()
-	    dt=rd.split("\n")
-	    dt.pop(len(dt)-1)
+def read_file(fname=""):
+	if(fname==""):
+		fname=raw_input("Name of instruction file: ")
+		fname_new=fname.split(".")
+		fname2=fname_new[0]+".bin"
 
-	    for line in dt:
-	        data=""
-	        put=""
-	        ins=""
-	        data=line.split(" ")
+		f1=open(fname, "r")
+		rd=f1.read()
+		rd=rd.lower()
+		f1.close()
+	else:
+		fname_new=fname.split(".")
+		fname2=fname_new[0]+".bin"
+		f1=open(fname, "r")
+		rd=f1.read()
+		rd=rd.lower()
+		f1.close()
 
-	        if(data[0]=="j"):
-	        	put=jump_func(data)
-	        elif(data[0] in ldstbr_list):
-	        	put=ldstbr_func(data)
-	        else:
-	        	put=data_processing_func(data)
+	
+	dt=rd.split("\n")
+	dt.pop(len(dt)-1)
 
-	        f2=open(fname2, "a")
-	        f2.write(put)
-	        f2.write("\n")
-	        f2.close
+	for line in dt:
+		data=""
+		put=""
+		ins=""
+		data=line.split(" ")
+
+		if(data[0]=="j"):
+			put=jump_func(data)
+		elif(data[0] in ldstbr_list):
+			put=ldstbr_func(data)
+		else:
+			put=data_processing_func(data)
+
+		f2=open(fname2, "a")
+		f2.write(put)
+		f2.write("\n")
+		f2.close
+	print "Compilation complete!"
+	return 0
 
 def make_file():
-	end=0
-	put=""
-	ins=raw_input("Instruction: ")
-	put+=ins+" "
-	if(ins=="j"):
-		put+=raw_input("Offset: ")
-	elif (ins in ldstbr):
-		put+=raw_input("rs1: ")
-		put+=raw_input("rs2: ")
-		put+=raw_input("Offset: ")
+
+	fname=raw_input("Save instruction file as (with extension): ")
+
+	f=open(fname, "w")
+	f.close()
+
+	end="0"
+	while(end=="0"):
+		put=""
+		comp=""
+		ins=raw_input("Instruction: ")
+		put+=ins+" "
+		if(ins=="j"):
+			put+=raw_input("Offset Value: ")
+			f1=open(fname, "a")
+			f1.write(put)
+			f1.write("\n")
+			f1.close()
+			end=raw_input("Press '0' to continue or 'Other button then press Enter' to exit: ")
+		elif (ins in ldstbr_list):
+			put+=raw_input("Destination (R0/R1/R2/R3 etc.): ")
+			put+=" "
+			put+=raw_input("Source (R0/R1/R2/R3 etc.): ")
+			put+=" "
+			put+=raw_input("Offset Value: ")
+			f1=open(fname, "a")
+			f1.write(put)
+			f1.write("\n")
+			f1.close()
+			end=raw_input("Press '0' to continue or 'Other button then press Enter' to exit: ")
+		else:
+			put+=raw_input("Destination (R0/R1/R2/R3 etc.): ")
+			put+=" "
+			put+=raw_input("Source1 (R0/R1/R2/R3 etc.): ")
+			put+=" "
+			put+=raw_input("Source2 (R0/R1/R2/R3 etc.): ")
+			f1=open(fname, "a")
+			f1.write(put)
+			f1.write("\n")
+			f1.close()
+			end=raw_input("Press '0' to continue or 'Other button then press Enter' to exit: ")
+	
+	comp=raw_input("Do you want to compile now? Y/n: ")
+	if(comp.lower()=="y"):
+		read_file(fname)
+	else:
+		return 0
 
 
 if __name__=="__main__":
 	select=input("1. Make instruction file then compile\n2. Read Instruction from a file\nPlease, select: ")
-    if(select==1):
-    	make_file()
-    else:
-    	read_file()
+	if(select==1):
+		make_file()
+	else:
+		read_file()
 
-    
-
-
-        
-
-       
-
+exit()    
